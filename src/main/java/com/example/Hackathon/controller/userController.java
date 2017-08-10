@@ -36,8 +36,11 @@ public class userController {
 
     @PostMapping("/register")
     public String register(String email, String password, String firstName, String lastName) {
-        if (email == null || password == null || firstName == null || lastName == null){throw new IllegalArgumentException();}
+        if (email == null || password == null || firstName == null || lastName == null){throw new IllegalArgumentException("Please supply all required values");}
         
+        boolean alreadyExists = userRepo.findByEmail(email) != null;
+        if (alreadyExists){throw new IllegalArgumentException("User already exists");}
+
         User newUser = new User();
 
         newUser.setEmail(email);
