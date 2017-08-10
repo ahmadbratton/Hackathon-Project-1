@@ -1,5 +1,6 @@
 package com.example.Hackathon.controller;
 
+import com.example.Hackathon.exceptions.NotFoundException;
 import com.example.Hackathon.model.Event;
 import com.example.Hackathon.model.Status;
 import com.example.Hackathon.model.User;
@@ -54,7 +55,7 @@ public class EventController {
     public Event getSingleEvent(@PathVariable int eventId) {
         Event selectedEvent = eventRepo.findOne(eventId);
 
-        if (selectedEvent == null){throw new IllegalArgumentException();}
+        if (selectedEvent == null){throw new NotFoundException("Event not found with supplied id");}
 
         return selectedEvent;
     }
@@ -62,7 +63,7 @@ public class EventController {
     @RequestMapping("/{eventId}/rsvp")
     public String rsvp(@PathVariable int eventId, HttpSession session) {
         Event selectedEvent = eventRepo.findOne(eventId);
-        if (selectedEvent == null){throw new IllegalArgumentException();}
+        if (selectedEvent == null){throw new NotFoundException("Event not found with supplied id");}
 
         List<User> attendingList = selectedEvent.getAttending();
         User currentUser = userRepo.findOne((Integer) session.getAttribute("userId"));
