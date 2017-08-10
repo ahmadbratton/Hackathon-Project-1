@@ -37,7 +37,7 @@ public class EventController {
         List<User> created = new ArrayList<>();
         created.add(myUser);
 
-        Event newEvent = new Event("name", "description", new SimpleDateFormat(), Status.NEW, "location", created, created);
+        Event newEvent = new Event("name", "description", "Some date", Status.NEW, "location", created, created);
         eventRepo.save(newEvent);
         }
     }
