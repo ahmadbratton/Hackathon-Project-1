@@ -36,7 +36,8 @@ public class userController {
 
     @PostMapping("/register")
     public String register(String email, String password, String firstName, String lastName) {
-        // TODO: 8/10/17 add checks
+        if (email == null || password == null || firstName == null || lastName == null){throw new IllegalArgumentException();}
+        
         User newUser = new User();
 
         newUser.setEmail(email);
