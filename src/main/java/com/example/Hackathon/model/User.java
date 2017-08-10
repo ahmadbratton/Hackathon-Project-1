@@ -11,7 +11,7 @@ public class User {
     @GeneratedValue
     private int userId;
 
-    @Column
+    @Column(unique=true)
     private String email;
 
     @Column
@@ -83,5 +83,31 @@ public class User {
 
     public void setAcquaintances(List<User> acquaintances) {
         this.acquaintances = acquaintances;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+            "userId=" + userId +
+            ", email='" + email + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", acquaintances=" + acquaintances +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return userId == user.userId;
+    }
+
+    @Override
+    public int hashCode() {
+        return userId;
     }
 }

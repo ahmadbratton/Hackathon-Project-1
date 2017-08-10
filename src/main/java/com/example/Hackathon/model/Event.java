@@ -1,6 +1,6 @@
 package com.example.Hackathon.model;
+
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,10 +18,13 @@ public class Event {
     private String description;
 
     @Column
-    private Date date;
+    private String date;
 
     @Column
     private Status status;
+
+    @Column
+    private String location;
 
     @OneToMany
     private List<User> createdBy;
@@ -32,11 +35,12 @@ public class Event {
     public Event() {
     }
 
-    public Event(String name, String description, Date date, Status status, List<User> createdBy, List<User> attending) {
+    public Event(String name, String description, String date, Status status, String location, List<User> createdBy, List<User> attending) {
         this.name = name;
         this.description = description;
         this.date = date;
         this.status = status;
+        this.location = location;
         this.createdBy = createdBy;
         this.attending = attending;
     }
@@ -65,11 +69,11 @@ public class Event {
         this.description = description;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -95,5 +99,34 @@ public class Event {
 
     public void setAttending(List<User> attending) {
         this.attending = attending;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+            "eventId=" + eventId +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", date=" + date +
+            ", status=" + status +
+            ", location='" + location + '\'' +
+            ", createdBy=" + createdBy +
+            ", attending=" + attending +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Event event = (Event) o;
+
+        return eventId == event.eventId;
+    }
+
+    @Override
+    public int hashCode() {
+        return eventId;
     }
 }

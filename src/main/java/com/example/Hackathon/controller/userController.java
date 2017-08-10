@@ -4,12 +4,11 @@ package com.example.Hackathon.controller;
 import com.example.Hackathon.model.User;
 import com.example.Hackathon.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.HttpSessionRequiredException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.*;
 
 @RestController
 @RequestMapping("api/user")
@@ -17,28 +16,33 @@ public class userController {
     @Autowired
     UserRepo userRepo;
 
+    @PostMapping("/login")
+    public String login(String email, String password, HttpSession session) {
+        User foundUser = userRepo.findByEmail(email);
+        System.out.println(email);
+        System.out.println(password);
 
+        if (foundUser == null) {
+            return "user not found";
+        }
 
-
-    @RequestMapping("/login")
-    public String login(HttpSession session , @RequestBody String email , @RequestBody String password){
-       User foundUser = userRepo.findByEmail(email);
-       if (foundUser == null){
-           return "user not found";
-       }
-       if(foundUser.getPassword() == password){
-           session.setAttribute("userId", foundUser.getUserId());
-           return "user login successful";
-       }
-       else{
-           return "No user/password combination";
-       }
+        if (foundUser.getPassword().equals(password)) {
+            session.setAttribute("userId", foundUser.getUserId());
+            return "user login successful";
+        } else {
+            return "No user/password combination";
+        }
     }
 
+    @PostMapping("/register")
+    public String register(String email, String password, String firstName, String lastName) {
+        if (email == null || password == null || firstName == null || lastName == null){
+            throw new IllegalArgumentException("Please supply all required values");
+        }
+        
+        boolean alreadyExists = userRepo.findByEmail(email) != null;
+        if (alreadyExists){throw new IllegalArgumentException("User already exists");}
 
-
-    @RequestMapping("/register")
-    public String register(@RequestBody String email ,@RequestBody String password , @RequestBody String firstName , @RequestBody String lastName ){
         User newUser = new User();
 
         newUser.setEmail(email);
@@ -49,10 +53,13 @@ public class userController {
         userRepo.save(newUser);
 
         return "created new user";
-
     }
 
-
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "Logged out successfully";
+    }
 
 
 }
