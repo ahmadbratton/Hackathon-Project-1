@@ -16,15 +16,16 @@ public class Event {
     @OneToOne
     private User about;
 
-    @OneToOne
-    private User createdBy;
+    @OneToMany
+    private List<User> createdBy;
 
     @OneToMany
     private List<User> attending;
+    
     public Event() {
     }
 
-    public Event(String description, User about, User createdBy, List<User> attending) {
+    public Event(String description, User about, List<User> createdBy, List<User> attending) {
         this.description = description;
         this.about = about;
         this.createdBy = createdBy;
@@ -55,11 +56,11 @@ public class Event {
         this.about = about;
     }
 
-    public User getCreatedBy() {
+    public List<User> getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(List<User> createdBy) {
         this.createdBy = createdBy;
     }
 
