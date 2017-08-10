@@ -1,5 +1,6 @@
 package com.example.Hackathon.model;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "events")
@@ -15,13 +16,13 @@ public class Event {
     @OneToOne
     private User about;
 
-    @OneToOne
-    private User createdBy;
+    @OneToMany
+    private List<User> createdBy;
 
     public Event() {
     }
 
-    public Event(String description, User about, User createdBy) {
+    public Event(String description, User about, List<User> createdBy) {
         this.description = description;
         this.about = about;
         this.createdBy = createdBy;
@@ -51,11 +52,11 @@ public class Event {
         this.about = about;
     }
 
-    public User getCreatedBy() {
+    public List<User> getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(List<User> createdBy) {
         this.createdBy = createdBy;
     }
 }
