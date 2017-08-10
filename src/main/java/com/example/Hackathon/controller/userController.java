@@ -19,6 +19,7 @@ public class userController {
 
 
 
+
     @RequestMapping("/login")
     public String login(HttpSession session , @RequestBody String email , @RequestBody String password){
        User foundUser = userRepo.findByEmail(email);
@@ -30,7 +31,7 @@ public class userController {
            return "user login successful";
        }
        else{
-           return "No user password combination";
+           return "No user/password combination";
        }
     }
 
