@@ -9,7 +9,7 @@ public class Note {
 
     @Id
     @GeneratedValue
-    private int eventId;
+    private int noteId;
 
     @Column
     private String event;
@@ -37,12 +37,12 @@ public class Note {
         this.createdBy = createdBy;
     }
 
-    public int getEventId() {
-        return eventId;
+    public int getNoteId() {
+        return noteId;
     }
 
-    public void setEventId(int eventId) {
-        this.eventId = eventId;
+    public void setNoteId(int noteId) {
+        this.noteId = noteId;
     }
 
     public String getEvent() {
