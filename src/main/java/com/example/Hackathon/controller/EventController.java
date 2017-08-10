@@ -1,6 +1,7 @@
 package com.example.Hackathon.controller;
 
 import com.example.Hackathon.model.Event;
+import com.example.Hackathon.model.Status;
 import com.example.Hackathon.model.User;
 import com.example.Hackathon.repository.EventRepo;
 import com.example.Hackathon.repository.UserRepo;
@@ -9,9 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by duhlig on 8/10/17.
@@ -25,43 +27,54 @@ public class EventController {
     @Autowired
     UserRepo userRepo;
 
+    @PostConstruct
+    public void init() {
+        if (userRepo.count() == 0){
+        User myUser = new User("newEmail", "firstName", "lastName", "password", null);
+        userRepo.save(myUser);
+
+        myUser = userRepo.findByEmail("email");
+        List<User> created = new ArrayList<>();
+        created.add(myUser);
+
+        Event newEvent = new Event("name", "description", "Some date", Status.NEW, "location", created, created);
+        eventRepo.save(newEvent);
+        }
+    }
+
     @RequestMapping("/all")
     public List<Event> viewEvents() {
-        Iterable<Event> getAllEvents = eventRepo.findAll();
         ArrayList<Event> allEvents = new ArrayList<>();
-        for(Event currentEvent : getAllEvents) {
-            allEvents.add(currentEvent);
-        }
+        eventRepo.findAll().forEach(allEvents::add);
+
         return allEvents;
     }
 
     @RequestMapping("/{eventId}")
     public Event getSingleEvent(@PathVariable int eventId) {
         Event selectedEvent = eventRepo.findOne(eventId);
+
+        if (selectedEvent == null){throw new IllegalArgumentException();}
+
         return selectedEvent;
     }
 
     @RequestMapping("/{eventId}/rsvp")
-    public String rsvp(@PathVariable int eventId, HttpSession session){
+    public String rsvp(@PathVariable int eventId, HttpSession session) {
         Event selectedEvent = eventRepo.findOne(eventId);
-        List<User> attendingList = selectedEvent.getAttending();
-        User currentUser = userRepo.findOne((Integer) session.getAttribute("userID"));
-        Boolean userFound = false;
+        if (selectedEvent == null){throw new IllegalArgumentException();}
 
-        for (int i = 0; i < attendingList.size(); i++) {
-            if (currentUser.equals(attendingList.get(i))) {
-                userFound = true;
-                attendingList.remove(i);
-            }
-        }
-        if (!userFound) {
+        List<User> attendingList = selectedEvent.getAttending();
+        User currentUser = userRepo.findOne((Integer) session.getAttribute("userId"));
+
+        if (attendingList.contains(currentUser)){
+            attendingList.remove(currentUser);
+            eventRepo.save(selectedEvent);
+            return "User no longer going to event";
+        } else {
             attendingList.add(currentUser);
+            eventRepo.save(selectedEvent);
+            return "user is now attending this event";
         }
-        selectedEvent.setAttending(attendingList);
-        eventRepo.save(selectedEvent);
-        if (userFound) {
-            return "user revoked rsvp";
-        }
-        return "user is now attending this event";
     }
 }
