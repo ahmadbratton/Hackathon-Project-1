@@ -1,7 +1,7 @@
 package com.example.Hackathon.model;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Entity
@@ -19,7 +19,7 @@ public class Event {
     private String description;
 
     @Column
-    private Date date;
+    private SimpleDateFormat date;
 
     @Column
     private Status status;
@@ -36,7 +36,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(String name, String description, Date date, Status status, String location, List<User> createdBy, List<User> attending) {
+    public Event(String name, String description, SimpleDateFormat date, Status status, String location, List<User> createdBy, List<User> attending) {
         this.name = name;
         this.description = description;
         this.date = date;
@@ -70,11 +70,11 @@ public class Event {
         this.description = description;
     }
 
-    public Date getDate() {
+    public SimpleDateFormat getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(SimpleDateFormat date) {
         this.date = date;
     }
 

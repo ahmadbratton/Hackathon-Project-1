@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by duhlig on 8/10/17.
@@ -39,7 +37,7 @@ public class EventController {
         List<User> created = new ArrayList<>();
         created.add(myUser);
 
-        Event newEvent = new Event("name", "description", new Date(), Status.NEW, "location", created, created);
+        Event newEvent = new Event("name", "description", new SimpleDateFormat(), Status.NEW, "location", created, created);
         eventRepo.save(newEvent);
         }
     }
