@@ -3,7 +3,7 @@ package com.example.Hackathon.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="acquaintance")
+@Table(name = "acquaintance")
 public class Request {
 
     @Id
@@ -58,5 +58,30 @@ public class Request {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+            "requestId=" + requestId +
+            ", requestFrom=" + requestFrom +
+            ", requestTo=" + requestTo +
+            ", message='" + message + '\'' +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Request request = (Request) o;
+
+        return requestId == request.requestId;
+    }
+
+    @Override
+    public int hashCode() {
+        return requestId;
     }
 }

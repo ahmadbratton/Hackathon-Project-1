@@ -1,6 +1,6 @@
 package com.example.Hackathon.model;
+
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "notes")
@@ -61,4 +61,28 @@ public class Note {
         this.createdBy = createdBy;
     }
 
+    @Override
+    public String toString() {
+        return "Note{" +
+            "noteId=" + noteId +
+            ", description='" + description + '\'' +
+            ", about=" + about +
+            ", createdBy=" + createdBy +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Note note = (Note) o;
+
+        return noteId == note.noteId;
+    }
+
+    @Override
+    public int hashCode() {
+        return noteId;
+    }
 }
