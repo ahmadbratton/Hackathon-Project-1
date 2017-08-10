@@ -16,7 +16,7 @@ public class Note {
     @OneToOne
     private User about;
 
-    @OneToMany
+    @OneToOne
     private User createdBy;
 
 
