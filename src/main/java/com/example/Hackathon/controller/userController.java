@@ -51,8 +51,4 @@ public class userController {
         return "created new user";
 
     }
-
-
-
-
 }
