@@ -1,5 +1,6 @@
 package com.example.Hackathon.model;
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -11,25 +12,29 @@ public class Event {
     private int eventId;
 
     @Column
+    private String name;
+
+    @Column
     private String description;
 
-    @OneToOne
-    private User about;
+    @Column
+    private Date date;
+
+    @Column
+    private Status status;
 
     @OneToMany
     private List<User> createdBy;
 
-    @OneToMany
-    private List<User> attending;
-    
     public Event() {
     }
 
-    public Event(String description, User about, List<User> createdBy, List<User> attending) {
+    public Event(String name, String description, Date date, Status status, List<User> createdBy) {
+        this.name = name;
         this.description = description;
-        this.about = about;
+        this.date = date;
+        this.status = status;
         this.createdBy = createdBy;
-        this.attending = attending;
     }
 
     public int getEventId() {
@@ -40,6 +45,14 @@ public class Event {
         this.eventId = eventId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -48,12 +61,20 @@ public class Event {
         this.description = description;
     }
 
-    public User getAbout() {
-        return about;
+    public Date getDate() {
+        return date;
     }
 
-    public void setAbout(User about) {
-        this.about = about;
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public List<User> getCreatedBy() {
@@ -63,18 +84,4 @@ public class Event {
     public void setCreatedBy(List<User> createdBy) {
         this.createdBy = createdBy;
     }
-
-    public List<User> getAttending() {
-        return attending;
-    }
-
-    public void setAttending(List<User> attending) {
-        this.attending = attending;
-    }
-
-//    Event newEvent = new Event();
-//    User myUsre = new User();
-//
-//    newEvent.getAttending().add(myUsre);
-//    EventRepo.save(newEvent);
 }
