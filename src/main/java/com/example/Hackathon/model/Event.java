@@ -26,15 +26,19 @@ public class Event {
     @OneToMany
     private List<User> createdBy;
 
+    @OneToMany
+    private List<User> attending;
+
     public Event() {
     }
 
-    public Event(String name, String description, Date date, Status status, List<User> createdBy) {
+    public Event(String name, String description, Date date, Status status, List<User> createdBy, List<User> attending) {
         this.name = name;
         this.description = description;
         this.date = date;
         this.status = status;
         this.createdBy = createdBy;
+        this.attending = attending;
     }
 
     public int getEventId() {
@@ -83,5 +87,13 @@ public class Event {
 
     public void setCreatedBy(List<User> createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public List<User> getAttending() {
+        return attending;
+    }
+
+    public void setAttending(List<User> attending) {
+        this.attending = attending;
     }
 }
