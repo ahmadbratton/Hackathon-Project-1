@@ -1,6 +1,5 @@
 package com.example.Hackathon.model;
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -12,45 +11,30 @@ public class Note {
     private int noteId;
 
     @Column
-    private String event;
-
-    @Column
     private String description;
 
-    @Column
-    private Date date;
+    @OneToOne
+    private User about;
 
-    @Column
-    private Status status;
+    @OneToOne
+    private User createdBy;
 
-    @OneToMany
-    private List<User> createdBy;
 
     public Note() {
     }
 
-    public Note(String event, String description, Date date, Status status, List<User> createdBy) {
-        this.event = event;
+    public Note(String description, User about, User createdBy) {
         this.description = description;
-        this.date = date;
-        this.status = status;
+        this.about = about;
         this.createdBy = createdBy;
     }
 
-    public int getNoteId() {
+    public int getNoteIdd() {
         return noteId;
     }
 
-    public void setNoteId(int noteId) {
+    public void setNventId(int noteId) {
         this.noteId = noteId;
-    }
-
-    public String getEvent() {
-        return event;
-    }
-
-    public void setEvent(String event) {
-        this.event = event;
     }
 
     public String getDescription() {
@@ -61,27 +45,20 @@ public class Note {
         this.description = description;
     }
 
-    public Date getDate() {
-        return date;
+    public User getAbout() {
+        return about;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setAbout(User about) {
+        this.about = about;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public List<User> getCreatedBy() {
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(List<User> createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
+
 }
