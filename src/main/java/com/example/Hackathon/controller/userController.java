@@ -61,5 +61,4 @@ public class userController {
         return "Logged out successfully";
     }
 
-
 }
