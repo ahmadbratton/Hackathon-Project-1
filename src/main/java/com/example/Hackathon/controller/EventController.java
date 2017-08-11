@@ -1,14 +1,13 @@
 package com.example.Hackathon.controller;
 
+import com.example.Hackathon.exceptions.NotFoundException;
 import com.example.Hackathon.model.Event;
 import com.example.Hackathon.model.Status;
 import com.example.Hackathon.model.User;
 import com.example.Hackathon.repository.EventRepo;
 import com.example.Hackathon.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
@@ -27,22 +26,22 @@ public class EventController {
     @Autowired
     UserRepo userRepo;
 
-    @PostConstruct
-    public void init() {
-        if (userRepo.count() == 0){
-        User myUser = new User("newEmail", "firstName", "lastName", "password", null);
-        userRepo.save(myUser);
+//    @PostConstruct
+//    public void init() {
+//        if (userRepo.count() == 0){
+//        User myUser = new User("newEmail", "firstName", "lastName", "password", null);
+//        userRepo.save(myUser);
+//
+//        myUser = userRepo.findByEmail("email");
+//        List<User> created = new ArrayList<>();
+//        created.add(myUser);
+//
+//        Event newEvent = new Event("name", "description", "Some date", Status.NEW, "location", created, created);
+//        eventRepo.save(newEvent);
+//        }
+//    }
 
-        myUser = userRepo.findByEmail("email");
-        List<User> created = new ArrayList<>();
-        created.add(myUser);
-
-        Event newEvent = new Event("name", "description", "Some date", Status.NEW, "location", created, created);
-        eventRepo.save(newEvent);
-        }
-    }
-
-    @RequestMapping("/all")
+    @GetMapping("/all")
     public List<Event> viewEvents() {
         ArrayList<Event> allEvents = new ArrayList<>();
         eventRepo.findAll().forEach(allEvents::add);
@@ -50,19 +49,19 @@ public class EventController {
         return allEvents;
     }
 
-    @RequestMapping("/{eventId}")
+    @GetMapping("/{eventId}")
     public Event getSingleEvent(@PathVariable int eventId) {
         Event selectedEvent = eventRepo.findOne(eventId);
 
-        if (selectedEvent == null){throw new IllegalArgumentException();}
+        if (selectedEvent == null){throw new NotFoundException("Event not found with supplied id");}
 
         return selectedEvent;
     }
 
-    @RequestMapping("/{eventId}/rsvp")
+    @PostMapping("/{eventId}/rsvp")
     public String rsvp(@PathVariable int eventId, HttpSession session) {
         Event selectedEvent = eventRepo.findOne(eventId);
-        if (selectedEvent == null){throw new IllegalArgumentException();}
+        if (selectedEvent == null){throw new NotFoundException("Event not found with supplied id");}
 
         List<User> attendingList = selectedEvent.getAttending();
         User currentUser = userRepo.findOne((Integer) session.getAttribute("userId"));
@@ -76,5 +75,28 @@ public class EventController {
             eventRepo.save(selectedEvent);
             return "user is now attending this event";
         }
+    }
+
+    @PostMapping("/create")
+    public String createNewEvent(String name, String description, String date, String location, HttpSession session){
+        User createdBy = userRepo.findOne((Integer)session.getAttribute("userId"));
+        List<User> createdByList = new ArrayList<>();
+        createdByList.add(createdBy);
+
+        Event newEvent  = new Event();
+        newEvent.setName(name);
+        newEvent.setDescription(description);
+        newEvent.setDate(date);
+        newEvent.setStatus(Status.NEW);
+        newEvent.setLocation(location);
+        newEvent.setCreatedBy(createdByList);
+
+        try {
+            eventRepo.save(newEvent);
+        } catch(Exception ex) {
+            return "Error creating event";
+        }
+        
+        return "Event created successfully";
     }
 }
