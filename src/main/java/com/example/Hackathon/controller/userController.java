@@ -1,8 +1,10 @@
 package com.example.Hackathon.controller;
 
 
+
 import com.example.Hackathon.model.User;
 import com.example.Hackathon.repository.UserRepo;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpSessionRequiredException;
@@ -32,6 +34,7 @@ public class userController {
         } else {
             return "No user/password combination";
         }
+
     }
 
     @PostMapping("/register")
@@ -45,8 +48,10 @@ public class userController {
 
         User newUser = new User();
 
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt(12));
+
         newUser.setEmail(email);
-        newUser.setPassword(password);
+        newUser.setPassword(hashed);
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
 
@@ -60,5 +65,6 @@ public class userController {
         session.invalidate();
         return "Logged out successfully";
     }
+
 
 }
